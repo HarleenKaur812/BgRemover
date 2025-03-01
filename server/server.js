@@ -13,16 +13,17 @@ const startServer = async () => {
     app.use(express.json());
     app.use(cors());
 
-    app.get("/", (req, res) => res.send("API Working..."));
+    app.get("/", (req, res) => res.send("API is working on Vercel!"));
+    app.get("/test", (req, res) => res.json({ message: "Test route is working!" }));
 
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
   } catch (error) {
     console.error("❌ Server startup error:", error);
     process.exit(1);
   }
 };
 
-startServer();
-
-export default app; // Required for Vercel
+// Ensure serverless export for Vercel
+export default async (req, res) => {
+  await startServer();
+  app(req, res);
+};
