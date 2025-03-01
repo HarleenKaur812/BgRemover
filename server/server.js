@@ -6,14 +6,23 @@ import connectDB from "./configs/mongodb.js";
 const app = express();
 
 const startServer = async () => {
-  await connectDB();
+  try {
+    await connectDB();
+    console.log("✅ Database connected successfully");
 
-  app.use(express.json());
-  app.use(cors());
+    app.use(express.json());
+    app.use(cors());
 
-  app.get("/", (req, res) => res.send("API Working..."));
+    app.get("/", (req, res) => res.send("API Working..."));
+
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+  } catch (error) {
+    console.error("❌ Server startup error:", error);
+    process.exit(1);
+  }
 };
 
 startServer();
 
-export default app; // Vercel requires this export
+export default app; // Required for Vercel
